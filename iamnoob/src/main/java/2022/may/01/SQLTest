@@ -1,0 +1,19 @@
+# Q: 修复表中的名字
+# Write your MySQL query statement below
+select user_id,
+concat(Upper(left(name,1)),Lower(substring(name,2))) name
+from users
+order by user_id
+
+# Q:按日期分组销售产品
+# Write your MySQL query statement below 函数group_concat的使用
+SELECT sell_date, count(distinct product) as num_sold,group_concat(distinct product) as products
+from activities
+group by sell_date
+order by sell_date
+
+# Q: 患某种疾病的患者
+# Write your MySQL query statement below
+select patient_id,patient_name,conditions
+-- 正则表达式匹配
+from patients where  conditions regexp '^DIAB1|\\sDIAB1'
