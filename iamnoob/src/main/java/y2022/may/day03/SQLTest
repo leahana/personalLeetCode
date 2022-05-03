@@ -1,0 +1,22 @@
+# 175. 组合两个表
+# Write your MySQL query statement below
+select firstName ,lastName ,city,state from person t1
+left join address t2
+on t1.personId=t2.personId
+
+
+# 1581. 进店却未进行过交易的顾客
+# Write your MySQL query statement below
+select   customer_id,count(visit_id) as count_no_trans
+from visits
+where visit_id not in (select visit_id from transactions)
+group by customer_id
+
+
+# 1148. 文章浏览 I
+# Write your MySQL query statement below
+select distinct  author_id  as id
+from views
+where author_id = viewer_id
+order by author_id
+
