@@ -1,0 +1,27 @@
+# 197. 上升的温度
+# Write your MySQL query statement below
+select w2.id as id from weather w1, weather w2
+where datediff(w2.recordDate,w1.recordDate)=1
+and w1.temperature < w2.temperature
+
+# 607. 销售员
+# Write your MySQL query statement below
+select name from salesPerson
+where sales_id  not in
+ (select  distinct sales_id from orders where com_id in
+ (select com_id from company where name ="RED"))
+
+ # Write your MySQL query statement below
+ select name from salesPerson where sales_id not in (select sales_id from orders t1 left join company t2
+ on t1.com_id = t2.com_id  where t2.name = "RED")
+
+1693. 每天的领导和合伙人
+# Write your MySQL query statement below
+select
+date_id ,
+make_name,
+count(distinct lead_id) unique_leads ,
+count(distinct partner_id) unique_partners
+from dailySales
+group by
+date_id ,make_name
