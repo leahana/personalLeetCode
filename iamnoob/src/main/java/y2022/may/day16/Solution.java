@@ -1,5 +1,6 @@
 package y2022.may.day16;
 
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
