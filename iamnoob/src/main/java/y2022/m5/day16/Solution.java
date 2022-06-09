@@ -1,8 +1,6 @@
-package y2022.may.day16;
+package y2022.m5.day16;
 
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 class Solution {
     //双指针，反转字符串

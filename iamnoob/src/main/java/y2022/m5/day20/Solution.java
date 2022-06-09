@@ -1,4 +1,4 @@
-package y2022.may.day20;
+package y2022.m5.day20;
 
 import java.util.Arrays;
 

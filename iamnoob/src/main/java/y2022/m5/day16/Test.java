@@ -1,8 +1,6 @@
-package y2022.may.day16;
+package y2022.m5.day16;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @Author: leah_ana

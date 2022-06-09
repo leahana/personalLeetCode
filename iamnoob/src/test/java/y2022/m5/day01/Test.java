@@ -1,6 +1,4 @@
-package y2022.may.day01;
-
-import java.util.ArrayList;
+package y2022.m5.day01;
 
 /**
  * @Author: leah_ana
