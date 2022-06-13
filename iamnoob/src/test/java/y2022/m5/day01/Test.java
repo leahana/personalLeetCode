@@ -7,5 +7,6 @@ package y2022.m5.day01;
 
 public class Test {
     public static void main(String[] args) {
+        System.out.println("笑了");
     }
 }
