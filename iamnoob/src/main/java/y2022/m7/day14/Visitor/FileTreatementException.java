@@ -7,5 +7,11 @@ package y2022.m7.day14.Visitor;
  */
 
 public class FileTreatementException extends RuntimeException {
+    public FileTreatementException() {
+    }
+
+    public FileTreatementException(String message){
+        super(message);
+    }
 
 }

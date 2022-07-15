@@ -7,5 +7,7 @@ package y2022.m7.day14.Visitor;
  */
 
 public abstract class Visitor {
+        public abstract void visit(File file);
 
+    public abstract void visit(Directory directory);
 }

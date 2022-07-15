@@ -14,8 +14,8 @@ public abstract class Entry {
 
     public abstract int getSize ();         // 获取大小
 
-    public Entry add(Entry entry) throws  FilTreatementException{ // 加入目录条目
-        throw  new FilTreatementException();
+    public Entry add(Entry entry) throws  FileTreatementException{ // 加入目录条目
+        throw  new FileTreatementException();
     }
 
     public void printList(){       // 显示目录条目一览

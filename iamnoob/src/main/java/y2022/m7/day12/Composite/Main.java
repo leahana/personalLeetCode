@@ -41,7 +41,7 @@ public class Main {
             tumura.add(new File("junk.mail", 500));
             rootdir.printList();
 
-        } catch (FilTreatementException e) {
+        } catch (FileTreatementException e) {
             e.printStackTrace();
         }
 

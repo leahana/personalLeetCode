@@ -7,5 +7,6 @@ package y2022.m7.day14.Visitor;
  */
 
 public interface Element {
+    public abstract void accept(Visitor visitor);
 
 }

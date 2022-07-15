@@ -6,11 +6,11 @@ package y2022.m7.day12.Composite;
  * @Desc: 表示向文件中增加Entry时发生异常的类
  */
 
-public class FilTreatementException extends RuntimeException {
-    public FilTreatementException() {
+public class FileTreatementException extends RuntimeException {
+    public FileTreatementException() {
     }
 
-    public FilTreatementException(String message) {
+    public FileTreatementException(String message) {
         super(message);
     }
 }
