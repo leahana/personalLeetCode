@@ -1,4 +1,4 @@
-package y2022.m5.day01;
+package y2022.m10.day08;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
