@@ -1,13 +1,12 @@
 package y2022.m10.day12;
 
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @Author: LeahAna
@@ -49,6 +48,7 @@ public class NotSafeDemo {
                 System.out.println(list);
             },"线程"+i).start();
         }
+        new CopyOnWriteArrayList();
 
     }
 }
