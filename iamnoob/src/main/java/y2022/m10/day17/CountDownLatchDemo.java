@@ -1,26 +1,14 @@
 package y2022.m10.day17;
 
-import sun.awt.windows.ThemeReader;
-
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
 
 /**
  * @Author: LeahAna
  * @Date: 2022/10/17 09:08
- * @Desc: JUC三大辅助类
+ * @Desc: JUC三大辅助类--CountDownLatch (减少计数)
  */
 
-public class Auxiliary {
-    // 减少计数
-    private CountDownLatch countDownLatch;
-
-    // 循环栅栏
-    private CyclicBarrier cyclicBarrier;
-
-    // 信号灯
-    private Semaphore semaphore;
+public class CountDownLatchDemo {
 
 
     // CountDownLatch类可以设置一个计数器，通过countDown方法来进行-1的操作，
