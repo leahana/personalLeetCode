@@ -9,9 +9,13 @@ package y2022.m10.day18;
 public class LinkedBlockingQueue {
 
 /**
- * ArrayBlockingQueue在插入或删除元素时，不会产生或销毁任何额外的对象实例，而后者则会生成一个额外的
- * Node对象。这在长时间内需要高效并发地处理大批量数据的系统中，其对于GC的影响还是存在一定的区别。而在创建
- * ArrayBlockingQueue 时，我们在可以控制对象的内部锁是否采用公平锁，默认采用非公平锁
+ * ArrayBlockingQueue在插入或删除元素时，
+ * 不会产生或销毁任何额外的对象实例，
+ * 而后者则会生成一个额外的
+ * Node对象。这在长时间内需要高效并发地处理大批量数据的系统中，
+ * 其对于GC的影响还是存在一定的区别。
+ * 而在创建ArrayBlockingQueue 时，
+ * 我们在可以控制对象的内部锁是否采用公平锁，默认采用非公平锁
  *
  */
 
