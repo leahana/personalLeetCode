@@ -4,6 +4,7 @@ import org.omg.CORBA.INTERNAL;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 /**
  * @Author: LeahAna
@@ -59,6 +60,12 @@ public class CompletableFutureDemo {
         noReturn();
         System.out.println("----thenApply----");
         thenApply();
+        System.out.println("----exceptionally----");
+        exceptionally();
+        System.out.println("----handle----");
+        handle();
+
+
     }
 
     public static void noReturn() throws ExecutionException, InterruptedException {
@@ -101,5 +108,58 @@ public class CompletableFutureDemo {
                 }).thenApply(integer -> num * num);
         Integer integer = future.get();
         System.out.println("主线程结束，自线程结果为"+integer);
+    }
+
+    public static void thenAcceptTest(){
+        System.out.println("主线程开始");
+        CompletableFuture.supplyAsync(() -> {
+            System.out.println("加10任务开始");
+            num+=10;
+            return num;
+
+        }).thenApply(integer -> num*num).thenAccept(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) {
+                System.out.println("子线程全部处理完成，最后调用了accept 结果为："+integer);
+            }
+        });
+    }
+
+    public static void exceptionally() throws ExecutionException, InterruptedException {
+
+        System.out.println("主线程开始");
+
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+        int i= 1/0;
+            System.out.println("加10任务开始");
+            num += 10;
+            return num;
+
+        }).exceptionally(ex->{
+            System.out.println(ex.getMessage());
+            return -1;
+        });
+        System.out.println(future.get());
+    }
+
+    public static void handle() throws ExecutionException, InterruptedException {
+        System.out.println("主线程开始");
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            System.out.println("加10任务开始");
+            num += 10;
+            return num;
+        }).handle((i, ex) -> {
+            System.out.println("进入handle方法");
+            if (ex != null) {
+                System.out.println("发生了异常，内容为：" + ex.getMessage());
+                return -1;
+            } else {
+                System.out.println("正常完成 内容为：" + i);
+
+                return i;
+            }
+        });
+        System.out.println(future.get());
+
     }
 }
