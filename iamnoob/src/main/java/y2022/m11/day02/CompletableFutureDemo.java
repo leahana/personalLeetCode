@@ -1,5 +1,7 @@
 package y2022.m11.day02;
 
+import org.omg.CORBA.INTERNAL;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -37,7 +39,7 @@ public class CompletableFutureDemo {
      * 主线程里面创建一个CompletableFuture 然后主线程调用get方法会阻塞
      * 最后我们在一个主线程中是使其终止
      */
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         CompletableFuture<String> future = new CompletableFuture<>();
         new Thread(() -> {
             try {
@@ -53,8 +55,10 @@ public class CompletableFutureDemo {
         System.out.println("主线程调用get方法获取结果为：" + future.get());
         System.out.println("主线程完成，阻塞结束！");
 
-        System.out.println("--------");
+        System.out.println("----noReturn----");
         noReturn();
+        System.out.println("----thenApply----");
+        thenApply();
     }
 
     public static void noReturn() throws ExecutionException, InterruptedException {
@@ -74,5 +78,28 @@ public class CompletableFutureDemo {
 
         future.get();
         System.out.println("主线程结束");
+    }
+
+    /**
+     * 先对一个数+10 然后取平方
+     */
+    private static Integer num = 10;
+
+    public static void thenApply()  throws Exception{
+        System.out.println("主线程开始");
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(
+                () -> {
+                    try {
+
+                        System.out.println("加10 任务开始");
+                        num += 10;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return num;
+
+                }).thenApply(integer -> num * num);
+        Integer integer = future.get();
+        System.out.println("主线程结束，自线程结果为"+integer);
     }
 }
