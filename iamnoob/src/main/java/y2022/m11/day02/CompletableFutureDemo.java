@@ -68,6 +68,12 @@ public class CompletableFutureDemo {
 
     }
 
+    /**
+     * 没有返回值的异步任务
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static void noReturn() throws ExecutionException, InterruptedException {
         System.out.println("主线程开始");
         // 运行一个没有返回值的异步任务
@@ -92,7 +98,8 @@ public class CompletableFutureDemo {
      */
     private static Integer num = 10;
 
-    public static void thenApply()  throws Exception{
+    // 有返回值的异步任务
+    public static void thenApply() throws Exception {
         System.out.println("主线程开始");
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(
                 () -> {
@@ -107,41 +114,46 @@ public class CompletableFutureDemo {
 
                 }).thenApply(integer -> num * num);
         Integer integer = future.get();
-        System.out.println("主线程结束，自线程结果为"+integer);
+        System.out.println("主线程结束，自线程结果为" + integer);
     }
 
-    public static void thenAcceptTest(){
+    // 消费处理结果
+    // thenAccept消费处理结果，接受任务的处理结果，并消费处理，无返回结果
+    public static void thenAcceptTest() {
         System.out.println("主线程开始");
         CompletableFuture.supplyAsync(() -> {
             System.out.println("加10任务开始");
-            num+=10;
+            num += 10;
             return num;
 
-        }).thenApply(integer -> num*num).thenAccept(new Consumer<Integer>() {
+        }).thenApply(integer -> num * num).thenAccept(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) {
-                System.out.println("子线程全部处理完成，最后调用了accept 结果为："+integer);
+                System.out.println("子线程全部处理完成，最后调用了accept 结果为：" + integer);
             }
         });
     }
 
+    // 异常处理
+    // exceptionally异常处理，出现异常时触发
     public static void exceptionally() throws ExecutionException, InterruptedException {
 
         System.out.println("主线程开始");
 
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-        int i= 1/0;
+            int i = 1 / 0;
             System.out.println("加10任务开始");
             num += 10;
             return num;
 
-        }).exceptionally(ex->{
+        }).exceptionally(ex -> {
             System.out.println(ex.getMessage());
             return -1;
         });
         System.out.println(future.get());
     }
 
+    // handle 类似于thenAccept/thenRun方法。时最后一步的处理调用，但是同时可以处理异常
     public static void handle() throws ExecutionException, InterruptedException {
         System.out.println("主线程开始");
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
@@ -160,6 +172,29 @@ public class CompletableFutureDemo {
             }
         });
         System.out.println(future.get());
+
+    }
+
+    // 结果合并
+    // thenCompose合并两个有依赖关系的CompletableFutures的执行结果
+    public static void thenCompose() throws Exception {
+        System.out.println("主线程开始");
+        // 第一步加10
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            System.out.println("加10任务开始");
+            num += 10;
+            return num;
+        });
+        //  合并
+        CompletableFuture<Integer> future1 = future.thenCompose(i ->
+                // 在加一个CompletableFuture
+                CompletableFuture.supplyAsync(() -> {
+                    return i + 1;
+                }));
+
+        System.out.println(future.get());
+
+        System.out.println(future1.get());
 
     }
 }
