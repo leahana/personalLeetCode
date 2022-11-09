@@ -74,25 +74,24 @@ str1 = 'hello, world!'
 # print(str3.strip())
 
 
-a, b = 5, 10
-print('%d * %d = %d' % (a, b, a * b))
-
-'''字符串提供的方法来完成字符串的格式'''
-a, b = 5, 10
-print('{0} *{1} = {2}'.format(a, b, a * b))
-
-'''Python 3.6 之后 字符串更简介的书写方式， 就是在字符串前加上字母f，我们可以使用下面语法糖来简化上面的代码'''
-a, b = 5, 10
-print(f'{a}*{b}={a*b}')
-
-
+# a, b = 5, 10
+# print('%d * %d = %d' % (a, b, a * b))
+#
+# '''字符串提供的方法来完成字符串的格式'''
+# a, b = 5, 10
+# print('{0} *{1} = {2}'.format(a, b, a * b))
+#
+# '''Python 3.6 之后 字符串更简介的书写方式， 就是在字符串前加上字母f，我们可以使用下面语法糖来简化上面的代码'''
+# a, b = 5, 10
+# print(f'{a}*{b}={a*b}')
 
 
-
-
-
-
-
-
-
-
+list = [1, 2, 3, 4, 5]
+tuple = (1, 2, 3, 4, 5)
+set = {1, 2, 3, 4, 5}
+scores = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+print(list.pop())
+print(set.pop())
+print(scores.pop(2))
+print(scores.popitem())
+# list 默认从最后一个弹 set 默认从第一个弹
