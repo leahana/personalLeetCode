@@ -10,6 +10,10 @@ import datetime
 
 from openpyxl import Workbook
 
+"""
+python处理Excel
+"""
+
 
 def main():
     wb = Workbook()
@@ -18,6 +22,7 @@ def main():
     ws.append([1, 2, 3])
     ws['A2'] = datetime.datetime.now()
     wb.save('sample.xlsx')
+
 
 if __name__ == '__main__':
     main()
