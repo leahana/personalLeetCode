@@ -63,3 +63,20 @@ class EmployeeFactory:
         all_emp_types = {'M': Manager, 'P': Programmer, 'S': Salesman}
         cls = all_emp_types[emp_type.upper()]
         return cls(*args, **kwargs) if cls else None
+
+
+def main():
+    """主函数"""
+
+    emps = [
+        EmployeeFactory.create('M', '曹操'),
+        EmployeeFactory.create('P', '荀彧', 120),
+        EmployeeFactory.create('P', '郭嘉', 85),
+        EmployeeFactory.create('S', '典韦', 123000)
+    ]
+    for emp in emps:
+        print(f'{emp.name}:{emp.get_salary():.2f}元')
+
+
+if __name__ == '__main__':
+    main()
