@@ -11,7 +11,6 @@
 """
 
 from enum import Enum, unique
-import random
 
 
 @unique
@@ -81,9 +80,10 @@ class Player():
         """整理手上的牌"""
         self.cards.sort(key=comp)
 
+
 def main():
     """主函数"""
-    poker= Poker()
+    poker = Poker()
     poker.shuffle()
     players = [Player('东邪'), Player('西毒'), Player('南帝'), Player('北丐')]
     while poker.has_more:
