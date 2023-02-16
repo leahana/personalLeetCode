@@ -1,5 +1,5 @@
 #redis集群
-#spring:
+spring:
 #  redis:
 #    host: 127.0.0.1
 #    port: 6379
@@ -16,3 +16,12 @@
 #      max-idle: 8
 #      max-wait: -1
 #    password:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/pymysql_demo?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 2788
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
