@@ -1,113 +1,42 @@
 package top.yannyi.autobase.core.template;
 
-import cn.hutool.Hutool;
-import cn.hutool.core.util.ObjectUtil;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import top.yannyi.autobase.core.properties.SftpProperties;
+import top.yannyi.autobase.core.exception.SftpRetryException;
 
-import javax.swing.JFileChooser;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Vector;
+
 
 /**
  * @Author: LeahAna
- * @Date: 2023/3/22 14:06
- * @Desc: sftp操作模版类
+ * @Date: 2023/4/4 15:42
+ * @Desc: sftp操作模版接口
  */
+public interface SftpTemplate {
 
-@Slf4j
-public class SftpTemplate {
-
-    private final SftpProperties sftpProperties;
-    private ChannelSftp channelSftp = new ChannelSftp();
-    private Session session = null;
-    private Channel channel = null;
-
-
-    public SftpTemplate(SftpProperties sftpProperties) {
-        this.sftpProperties = sftpProperties;
-    }
+    /**
+     * 查看sftp根目录
+     *
+     * @return 根目录
+     */
+    String getHome() throws SftpException;
 
 
     /**
-     * 打开sftp连接
+     * 查看路径文件
      *
-     * @return 连接是否成功
+     * @param path 路径
+     * @return 文件夹名和文件名 list
      */
-    public boolean open() {
-        String username = sftpProperties.getUsername();
-        String password = sftpProperties.getPassword();
-        String ip = sftpProperties.getIp();
-        int port = sftpProperties.getPort();
-        int timeOut = sftpProperties.getTimeOut();
-        return getChannel(ip, port, username, password, timeOut);
-    }
+    List<String> getLs(String path) throws SftpException;
 
-    private boolean getChannel(String ip, int port, String username, String password, int timeOut) {
-        boolean flag = true;
-        try {
-            JSch jSch = new JSch();
-            this.session = jSch.getSession(username, ip, port);
-            if (StringUtils.isNotEmpty(password)) {
-                this.session.setPassword(password);
-                log.info("登陆密码已设置");
-            }
-            Properties config = new Properties();
-            config.put("StrictHostKeyChecking", "no");
-            this.session.setConfig(config);
-            this.session.setTimeout(timeOut);
-            this.session.connect();
-            this.channel = this.session.openChannel("sftp");
-            this.channel.connect();
-            log.info("登陆sftp服务器成功{}", ip + ":" + port);
-            this.channelSftp = (ChannelSftp) this.channel;
-        } catch (JSchException e) {
-            e.printStackTrace();
-            log.error("登陆sftp服务器失败{}", ip + ":" + port);
-            flag = false;
-        }
-        return flag;
-    }
 
     /**
-     * 关闭sftp连接
+     * 获取文件夹内文件名
      *
-     * @return 连接是否成功
+     * @param path 文件夹路径
+     * @return 文件名（包括后缀）
      */
-    public boolean close() {
-        boolean flag = true;
-        try {
-            if (ObjectUtil.isNotNull(this.channel)) {
-                this.channel.disconnect();
-                log.info("关闭sftp操作对象channel成功");
-            }
-            if (ObjectUtil.isNotNull(this.session)) {
-                this.session.disconnect();
-                log.info("sftp关闭session 成功");
-            }
-            log.info("关闭sftp操作成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("关闭sftp操作失败");
-            flag = false;
-        }
-        return flag;
-    }
+    List<String> getFilenames(String path) throws SftpException;
 
 
     /**
@@ -117,25 +46,8 @@ public class SftpTemplate {
      * @param endWith 文件后缀 如"txt"
      * @return 文件名（包括后缀）
      */
-    public List<String> getFileNames(String path, String endWith) {
-        List<String> fileList = new ArrayList<>();
-        try {
-            Vector dirs = this.channelSftp.ls(path);
-            for (Object dir : dirs) {
-                String fileFullName = ((ChannelSftp.LsEntry) dir).getFilename();
-                String[] filenameArr = fileFullName.split("\\.");
-                if (filenameArr.length > 1) {
-                    if (endWith.equalsIgnoreCase(filenameArr[filenameArr.length - 1])) {
-                        fileList.add(fileFullName);
-                    }
-                }
-            }
-        } catch (SftpException e) {
-            e.printStackTrace();
-            log.error("sftp获取目录下文件，文件后缀为：{}集合失败 path={},", endWith, path);
-        }
-        return fileList;
-    }
+    List<String> getFilenames(String path, String endWith) throws SftpException;
+
 
     /**
      * sftp上传文件到服务器
@@ -145,29 +57,15 @@ public class SftpTemplate {
      * @param localPath 本地路径
      * @return 文件上传是否成功
      */
-    public boolean uploadFile(String filepath, String filename, String localPath) {
-        boolean flag = true;
-        FileInputStream fis = null;
-        try {
-            channelSftp.cd(filepath);
-            fis = new FileInputStream(localPath + File.separator + filename);
-            channelSftp.put(fis,filename);
-            log.info("文件{}上传成功，filePath={},localPath={}", filename, filepath, localPath);
-        } catch (SftpException | FileNotFoundException e) {
-            e.printStackTrace();
-            log.error("文件{}上传失败，filePath={},localPath={}", filename, filepath, localPath);
-            flag = false;
-        } finally {
-            try {
-                Objects.requireNonNull(fis).close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                flag = false;
-            }
+    boolean uploadFile(final String filepath, final String filename, final String localPath);
 
-        }
-        return flag;
-    }
+
+    /**
+     * sftp上传文件到服务器
+     * @param filename 文件名
+     * @throws SftpRetryException 重试失败异常
+     */
+    void uploadFile(final String filename) throws SftpRetryException;
 
 
     /**
@@ -177,42 +75,92 @@ public class SftpTemplate {
      * @param filename 文件名
      * @return 是否删除成功
      */
-    public boolean delete(final String filepath, final String filename) {
-        boolean flag = true;
-        String finalPathname = filepath + File.separator + filename;
-        try {
-            channelSftp.rm(finalPathname);
-            log.info("文件删除成功 filepath={},filename={}", filepath, filename);
-        } catch (SftpException e) {
-            flag = false;
-            e.printStackTrace();
-            log.error("文件删除失败 filepath={},filename={}", filepath, filename);
-        }
-        return flag;
+    boolean deleteFile(final String filepath, final String filename);
+
+
+    /**
+     * sftp下载文件到本地
+     *
+     * @param filepath  文件路径
+     * @param filename  文件名
+     * @param localPath 本地路径
+     * @return 是否下载成功
+     */
+    boolean downloadFile(final String filepath, final String filename, final String localPath);
+
+
+    /**
+     * 创建文件夹路径
+     *
+     * @param createPath 创建路径
+     * @return 是否创建成功
+     */
+    boolean createDir(String createPath);
+
+
+    /**
+     * 判断是否sftp路径是否存在
+     *
+     * @param directory 文件路径
+     * @return 是否存在
+     */
+    boolean isDirExist(String directory);
+
+
+    /**
+     * 删除文件夹
+     *
+     * @param path            文件夹路径
+     * @param remoteDirectory 文件夹名称
+     * @return 是否删除成功
+     */
+    boolean deleteDir(String path, String remoteDirectory);
+
+
+    /**
+     * 下载SFTP服务器上的文件。
+     *
+     * @param filename 要下载的文件名。
+     * @return 下载到本地的文件路径。
+     */
+    String downloadFile(String filename) throws SftpRetryException;
+
+
+    /**
+     * 删除SFTP服务器上的文件。
+     *
+     * @param filename 要删除的文件名。
+     */
+    void deleteFile(String filename) throws SftpRetryException;
+
+
+    // 下面三个default方法在使用connectPool时不用手动实现
+    /**
+     * 打开SFTP连接。
+     *
+     * @return 是否成功打开连接。
+     */
+    default boolean open() {
+        return false;
+    }
+
+    /**
+     * 关闭SFTP连接。
+     *
+     * @return 是否成功关闭连接
+     */
+    default boolean close() {
+        return false;
+    }
+
+    /**
+     * 判断当前是否连接到SFTP服务器。
+     *
+     * @return 是否连接到SFTP服务器。
+     */
+    default boolean isConnect() {
+        return false;
     }
 
 
-    public boolean downloadFile(final String filepath, final String filename, final String localPath) {
-        boolean flag = true;
-        FileOutputStream fos = null;
-        try {
-            channelSftp.cd(filepath);
-            String downloadFinalFilepath = filepath + File.separator + filename;
-            String localFilepath = localPath + File.separator + filename;
-            fos = new FileOutputStream(localFilepath);
-            channelSftp.get(filename, fos);
-            log.info("文件：{} 下载成功，本地文件位置：{}", downloadFinalFilepath, localFilepath);
-        } catch (SftpException | FileNotFoundException e) {
-            flag = false;
-            e.printStackTrace();
-            log.error("文件下载失败 filename={},filepath={}", filename, filepath);
-        } finally {
-            try {
-                Objects.requireNonNull(fos).close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return flag;
-    }
 }
