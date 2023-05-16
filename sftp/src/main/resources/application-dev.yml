@@ -1,0 +1,42 @@
+server:
+  port: 8081
+
+spring:
+  messages:
+    encoding: utf-8
+
+logging:
+  level:
+    root: info
+
+auto-template-base:
+  # 读取文件默认文件格式
+  fileReadEncode: UTF-8
+  sftp:
+    ip: 127.0.0.1
+    port: 22
+    username: username123
+    password: password123
+    timeOut: 12000
+    retryInterval: 1000
+    maxRetries: 3
+    # sftp服务器路径
+    #  下载文件的位置
+    downloadPath: /download
+    #  上传的目的地文件夹
+    uploadPath: /upload
+    # 本地路径
+    # 本地临时路径/下载/上传临时文件夹
+    localTmpPath: /Users/anshengyo/WorkSpace/IdeaProjects/JavaProject/auto/auto-template/data/download # 下载/上传之前中转站，上传下载完成后会删除
+    # 下载文件备份文件夹 下载的文件处理完会备份到此文件夹
+    downloadBakPath: /Users/anshengyo/WorkSpace/IdeaProjects/JavaProject/auto/auto-template/data/bak/download
+    # 上传文件备份文件夹 上传文件后会备份到此文件夹
+    uploadBakPath: /Users/anshengyo/WorkSpace/IdeaProjects/JavaProject/auto/auto-template/data/bak/upload
+cache:
+  maximum:
+    size: 1000
+  expire:
+    time:
+      minutes: 10
+  config:
+    cacheFolder: /Users/anshengyo/WorkSpace/IdeaProjects/JavaProject/auto-template/data/config
