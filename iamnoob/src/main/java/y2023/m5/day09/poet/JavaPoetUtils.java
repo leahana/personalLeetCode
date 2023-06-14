@@ -27,7 +27,6 @@ public class JavaPoetUtils {
         createEntitiesFromXlsx("y2023/m5/day09","/Users/anshengyo/WorkSpace/IdeaProjects/JavaProject/github/personalLeetCode/iamnoob/src/main/java/y2023/m5/day09/test.xlsx");
     }
 
-
     public static void createEntitiesFromXlsx(String packageName, String filePath) throws Exception {
 
         // 读取表格数据

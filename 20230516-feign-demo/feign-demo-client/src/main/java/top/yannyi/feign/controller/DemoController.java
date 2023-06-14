@@ -13,7 +13,7 @@ public class DemoController {
         this.helloClient = helloClient;
     }
 
-    @GetMapping("/demo")
+    @GetMapping("/feign")
     public String demo() {
         return helloClient.hello();
     }
